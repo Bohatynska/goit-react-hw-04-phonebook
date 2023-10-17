@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-// import { nanoid } from 'nanoid';
+import React, { useState } from 'react';
+import { nanoid } from 'nanoid';
 import {
   FormWrap,
   Form,
@@ -8,54 +8,59 @@ import {
   FormButton,
 } from 'Components/PhonebookForm/PhonebookForm.styled';
 
-class PhonebookForm extends Component {
-  state = {
-    // contacts: [],
-    name: '',
-    number: '',
+function PhonebookForm({ onSubmit }) {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+
+  const handleInputChange = event => {
+    const { name, value } = event.currentTarget;
+    if (name === 'name') {
+      setName(value);
+    }
+    if (name === 'number') {
+      setNumber(value);
+    }
   };
-  handleInputChange = event => {
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
-  };
-  handleSubmit = event => {
+
+  const handleSubmit = event => {
     event.preventDefault();
-    this.props.onSubmit(this.state);
-    // this.id = nanoid();
-    this.reset();
+
+    const contact = {
+      id: nanoid(),
+      name,
+      number,
+    };
+    onSubmit(contact);
+    reset();
   };
 
-  reset = () => {
-    this.setState({
-      name: '',
-      number: '',
-    });
+  const reset = () => {
+    setName('');
+    setNumber('');
   };
 
-  render() {
-    return (
-      <FormWrap>
-        <h1>PHONEBOOK</h1>
-        <Form onSubmit={this.handleSubmit}>
-          <FormLabel htmlFor="name">Name</FormLabel>
-          <FormInput
-            onChange={this.handleInputChange}
-            value={this.state.name}
-            type="text"
-            name="name"
-          ></FormInput>
-          <FormLabel htmlFor="number">Number</FormLabel>
-          <FormInput
-            onChange={this.handleInputChange}
-            value={this.state.number}
-            type="tel"
-            name="number"
-          ></FormInput>
-          <FormButton type="submit">Add contact</FormButton>
-        </Form>
-      </FormWrap>
-    );
-  }
+  return (
+    <FormWrap>
+      <h1>PHONEBOOK</h1>
+      <Form onSubmit={handleSubmit}>
+        <FormLabel htmlFor="name">Name</FormLabel>
+        <FormInput
+          onChange={handleInputChange}
+          value={name}
+          type="text"
+          name="name"
+        ></FormInput>
+        <FormLabel htmlFor="number">Number</FormLabel>
+        <FormInput
+          onChange={handleInputChange}
+          value={number}
+          type="tel"
+          name="number"
+        ></FormInput>
+        <FormButton type="submit">Add contact</FormButton>
+      </Form>
+    </FormWrap>
+  );
 }
+
 export default PhonebookForm;
